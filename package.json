@@ -1,0 +1,38 @@
+{
+	"name": "authentic-development-v2-ts",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start:dev": "nodemon -w ./src -e ts,hbs,css -x \"ts-node src/server.ts\"",
+		"static": "tailwindcss -c ./tailwind.config.js -i ./global.css -o ./static/output.css --watch",
+		"lint": "eslint --ignore-path .gitignore --ext .js,.ts",
+		"format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
+		"initdb": "sqlite3 ./db/db.sqlite3 < ./db/initdb.sql",
+		"postinstall": "ln -sf ../node_modules/htmx.org/dist/htmx.min.js static/htmx.min.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.18.2",
+		"hbs": "^4.2.0",
+		"htmx.org": "^1.9.8",
+		"sqlite": "^5.1.1",
+		"sqlite3": "^5.1.6"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.21",
+		"@types/hbs": "^4.0.4",
+		"@typescript-eslint/eslint-plugin": "^6.10.0",
+		"@typescript-eslint/parser": "^6.10.0",
+		"daisyui": "^3.9.4",
+		"eslint": "^8.53.0",
+		"eslint-config-prettier": "^9.0.0",
+		"nodemon": "^3.0.1",
+		"prettier": "^3.0.3",
+		"tailwindcss": "^3.3.5",
+		"ts-node": "^10.9.1",
+		"typescript": "^5.2.2"
+	}
+}
