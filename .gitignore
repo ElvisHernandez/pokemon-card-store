@@ -1,6 +1,7 @@
 node_modules
 dist
-static/*
-!static/
-!static/.gitkeep
+static/htmx.min.js
+static/output.css
 *.sqlite
+*.sqlite3
+private

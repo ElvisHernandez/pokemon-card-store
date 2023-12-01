@@ -19,8 +19,10 @@ app.use((req, res, next) => {
 });
 
 // App pages
-app.get("/", (req, res) => {
-	res.render("home", { header: "hello, world" });
+app.get("/", async (req, res) => {
+	const pokemonCards = await req.db.getPokemonCards();
+
+	res.render("home", { header: "hello, world", pokemonCards });
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));

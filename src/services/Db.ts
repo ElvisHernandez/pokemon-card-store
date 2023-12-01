@@ -8,7 +8,7 @@ export class Db {
 
 	private constructor() {
 		this.dbPromise = open({
-			filename: path.resolve(__dirname, "../../db/db.sqlite"),
+			filename: path.resolve(__dirname, "../../db/db.sqlite3"),
 			driver: sqlite3.Database,
 		});
 	}
@@ -16,6 +16,24 @@ export class Db {
 	async getUsers() {
 		const db = await this.dbPromise;
 		return db.get("select * from User;");
+	}
+
+	async getPokemonCards() {
+		const db = await this.dbPromise;
+
+		const formatter = new Intl.NumberFormat("en-us", {
+			style: "currency",
+			currency: "usd",
+		});
+
+		const pokemonCards = (await db.all("select * from PokemonCard;")).map(
+			(card) => ({
+				...card,
+				price: formatter.format(card.price),
+			}),
+		);
+
+		return pokemonCards;
 	}
 
 	static getInstance() {
