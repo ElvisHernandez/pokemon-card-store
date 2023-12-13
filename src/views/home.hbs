@@ -13,9 +13,18 @@
                 <figure><img src="{{this.imgUrl}}" alt="Shoes" /></figure>
                 <div class="card-body">
                     <h2 class="card-title">{{this.name}}</h2>
-                    <p>{{this.price}}</p>
+                    <p class="font-semibold">{{this.price}}</p>
                     <div class="card-actions justify-end">
-                    <button class="btn btn-primary">Buy Now</button>
+
+                    <button 
+                        class="btn btn-primary"
+                        hx-put="/cart"
+                        hx-vals='{ "id": {{this.id}} }'
+                        hx-target="#main-nav"
+                        hx-swap="outerHTML"
+                    >
+                        Buy Now
+                    </button>
                     </div>
                 </div>
             </div>
