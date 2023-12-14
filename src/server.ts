@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request } from "express";
 import { Db } from "./services/Db";
 import hbs from "hbs";
 import path from "path";
@@ -38,9 +38,22 @@ function getCartItems() {
 	return cartItems;
 }
 
+async function getPokemonCards(req: Request) {
+	const pokemonCards = await req.db.getPokemonCards();
+
+	for (const pokemonCard of pokemonCards) {
+		const amountInCart = cart.ids[pokemonCard.id];
+
+		pokemonCard.amountInCart = amountInCart;
+		pokemonCard.isInCart = !!amountInCart;
+	}
+
+	return pokemonCards;
+}
+
 // App pages
 app.get("/", async (req, res) => {
-	const pokemonCards = await req.db.getPokemonCards();
+	const pokemonCards = await getPokemonCards(req);
 
 	res.render("home", {
 		header: "hello, world",
@@ -49,10 +62,27 @@ app.get("/", async (req, res) => {
 	});
 });
 
-app.put("/cart", async (req, res) => {
-	const { id } = req.body;
-	cart.ids[id] = (cart.ids[id] || 0) + 1;
+app.get("/pokemon-card/:id", async (req, res) => {
+	const pokemonCard = await req.db.getPokemonCard(req.params.id);
 
+	res.render("partials/pokemonCard", {
+		...pokemonCard,
+		isInCart: !!cart.ids[pokemonCard.id],
+		amountInCart: cart.ids[pokemonCard.id],
+	});
+});
+
+app.put("/cart", async (req, res) => {
+	const { id, add } = req.body;
+
+	const increment = add === "true" ? 1 : -1;
+	const itemQuantity = (cart.ids[id] || 0) + increment;
+
+	if (itemQuantity >= 0) {
+		cart.ids[id] = itemQuantity;
+	}
+
+	res.setHeader("HX-Trigger", `cart-update-${id}`);
 	res.render("partials/nav", { cartItems: getCartItems() });
 });
 

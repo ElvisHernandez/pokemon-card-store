@@ -2,6 +2,11 @@ import { Database, open } from "sqlite";
 import sqlite3 from "sqlite3";
 import path from "path";
 
+const formatter = new Intl.NumberFormat("en-us", {
+	style: "currency",
+	currency: "usd",
+});
+
 export class Db {
 	private static instance: Db;
 	private dbPromise: Promise<Database<sqlite3.Database, sqlite3.Statement>>;
@@ -18,13 +23,20 @@ export class Db {
 		return db.get("select * from User;");
 	}
 
-	async getPokemonCards() {
+	async getPokemonCard(pokemonCardId: string) {
 		const db = await this.dbPromise;
 
-		const formatter = new Intl.NumberFormat("en-us", {
-			style: "currency",
-			currency: "usd",
-		});
+		const pokemonCard = await db.get(
+			"select * from PokemonCard where id = ?;",
+			pokemonCardId,
+		);
+		pokemonCard.price = formatter.format(pokemonCard.price);
+
+		return pokemonCard;
+	}
+
+	async getPokemonCards() {
+		const db = await this.dbPromise;
 
 		const pokemonCards = (await db.all("select * from PokemonCard;")).map(
 			(card) => ({
