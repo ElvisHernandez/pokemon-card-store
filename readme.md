@@ -37,3 +37,9 @@ In another run the command
 ```bash
 npm run start:dev # Starts node server
 ```
+
+## Blog Article
+
+[Intro to HTMX for Javascript Devs](https://authenticdevelopment.net/blog/2/intro-to-htmx-for-javascript-devs)
+
+Is a blog article where I describe what HTMX is and how to use it to go from the state of this repo in the `master` branch to the state in the `implement-cart-and-pokemon-card-counters` branch.
