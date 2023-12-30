@@ -3,9 +3,18 @@
     <p class="font-poppins text-[32px] font-semibold">PokeShop</p>
     <div class="flex items-center">
         <span class="material-symbols-outlined text-[32px]">
-            shopping_bag
+            <a href="/cart">
+                shopping_bag
+            </a>
         </span>
 
-       <div class="badge badge-success">+{{ cartItems }}</div>
+       <div class="badge badge-success mr-[16px]">+{{ cartItems }}</div>
+
+       {{!-- auth buttons --}}
+       {{#if isAuthenticated }}
+            <a hx-get="/signout" class="btn btn-error">Sign out</a>
+       {{else}}
+            <a href="/signin" class="btn btn-success">Sign in</a>
+       {{/if}}
     </div>
 </nav>

@@ -5,6 +5,7 @@ declare global {
 		// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 		export interface Request {
 			db: Db;
+			user?: { email: string };
 		}
 	}
 }

@@ -1,0 +1,31 @@
+
+<html lang="en">
+
+    {{> _head}}
+
+    <body class="flex flex-col justify-center items-center h-[100vh]">
+
+        <h1 class="font-yellowtail text-[32px]">Sign In</h1>
+
+        <form id="signin-form" hx-post="/signin" hx-target="body" hx-swap="beforeend" class="w-[60%]">
+
+            <label class="form-control w-full">
+                <div class="label">
+                    <span class="label-text">Enter your email*?</span>
+                </div>
+                <input required name="email" type="email" placeholder="johndoe@gmail.com" class="input input-bordered w-full" />
+            </label>
+
+            <label class="form-control w-full">
+                <div class="label">
+                    <span class="label-text">Enter your password*?</span>
+                </div>
+                <input required min="6" name="password" type="password" value="123456" class="input input-bordered w-full"/>
+            </label>
+
+            <button class="btn mt-[16px]">Sign in</button>
+        </form>
+
+        <a href="/signup" class="text-blue-500">Need to signup?</a>
+    </body>
+</html>

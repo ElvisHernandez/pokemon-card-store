@@ -8,4 +8,18 @@
 	<script src="/htmx.min.js"></script>
 	{{! Load Tailwind CSS + Daisy UI }}
 	<link rel="stylesheet" href="/output.css" />
+
+    <script defer>
+        htmx.on('htmx:beforeSwap', function(evt) {
+            // Allow 400, 401, and 500 responses to swap
+            // We treat these as form validation errors
+
+            const allowSwaps = [400, 401, 500];
+
+            if (allowSwaps.includes(evt.detail.xhr.status)) {
+                evt.detail.shouldSwap = true;
+                evt.detail.isError = false;
+            }
+        });
+    </script>
 </head>

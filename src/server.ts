@@ -2,6 +2,9 @@ import express, { Request } from "express";
 import { Db } from "./services/Db";
 import hbs from "hbs";
 import path from "path";
+import cookieParser from "cookie-parser";
+import { authRouter } from "./routes/auth";
+import { isAuthenticated } from "./middleware/isAuthenticated";
 
 hbs.registerPartials(path.resolve(__dirname, "./views/partials"));
 
@@ -14,6 +17,8 @@ app.set("views", "./src/views");
 
 app.use(express.static(path.resolve(__dirname, "../static")));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 app.use((req, res, next) => {
 	req.db = db;
 	next();
@@ -51,6 +56,9 @@ async function getPokemonCards(req: Request) {
 	return pokemonCards;
 }
 
+// Auth routes
+app.use(authRouter);
+
 // App pages
 app.get("/", async (req, res) => {
 	const pokemonCards = await getPokemonCards(req);
@@ -59,6 +67,7 @@ app.get("/", async (req, res) => {
 		header: "hello, world",
 		pokemonCards,
 		cartItems: getCartItems(),
+		isAuthenticated: !!req.cookies.sessionId,
 	});
 });
 
@@ -72,6 +81,10 @@ app.get("/pokemon-card/:id", async (req, res) => {
 	});
 });
 
+app.get("/cart", isAuthenticated, async (req, res) => {
+	res.render("cart", { userEmail: req.user?.email });
+});
+
 app.put("/cart", async (req, res) => {
 	const { id, add } = req.body;
 
@@ -83,7 +96,10 @@ app.put("/cart", async (req, res) => {
 	}
 
 	res.setHeader("HX-Trigger", `cart-update-${id}`);
-	res.render("partials/nav", { cartItems: getCartItems() });
+	res.render("partials/nav", {
+		cartItems: getCartItems(),
+		isAuthenticated: req.cookies.sessionId,
+	});
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));

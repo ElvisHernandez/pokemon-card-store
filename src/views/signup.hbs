@@ -1,0 +1,67 @@
+
+<html lang="en">
+
+    {{> _head}}
+
+    <body class="flex flex-col justify-center items-center h-[100vh]">
+
+        <h1 class="font-yellowtail text-[32px]">Sign Up!</h1>
+
+        <form id="signup-form" hx-post="/signup" hx-target="body" hx-swap="beforeend" class="w-[60%]">
+
+            <label class="form-control w-full">
+                <div class="label">
+                    <span class="label-text">What is your email*?</span>
+                </div>
+                <input required name="email" type="email" placeholder="johndoe@gmail.com" class="input input-bordered w-full" />
+            </label>
+
+            <label class="form-control w-full">
+                <div class="label">
+                    <span class="label-text">What is your password*?</span>
+                </div>
+                <input required min="6" name="password" type="password" value="123456" class="input input-bordered w-full"/>
+            </label>
+
+            <label class="form-control w-full">
+                <div class="label">
+                    <span class="label-text">Enter password confirmation*?</span>
+                </div>
+                <input required min="6" name="passwordConfirmation" type="password" value="123456" class="input input-bordered w-full"/>
+            </label>
+
+            <button class="btn mt-[16px]">Submit</button>
+        </form>
+
+        <a href="/signin" class="text-blue-500">Need to signin?</a>
+
+        {{> errorAlert 
+            alertId="password-confirmation-error" 
+            display="hidden" 
+            errorMessage="Your password and password confirmation don't match"
+        }}
+
+        <script>
+
+            htmx.on("htmx:beforeRequest", (e) => {
+
+                if (e.srcElement.id !== 'signup-form') return;
+
+                const password = document.querySelector('[name=password]')?.value;
+                const passwordConfirmation = document.querySelector('[name=passwordConfirmation]')?.value;
+
+                // show alert error then hide after 10 seconds
+                if (password !== passwordConfirmation) {
+                    e.preventDefault();
+                    
+                    const alert = document.querySelector('#password-confirmation-error');
+                    alert.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        alert.classList.add('hidden');
+                    }, 10000);
+                }
+            });
+        </script>
+    </body>
+</html>
